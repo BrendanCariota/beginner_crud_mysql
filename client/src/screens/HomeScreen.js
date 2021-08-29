@@ -8,6 +8,8 @@ const HomeScreen = () => {
   const [position, setPosition] = useState("");
   const [wage, setWage] = useState("0");
 
+  const [employeeList, setEmployeedList] = useState([]);
+
   const submitHandler = async () => {
     const user = await axios.post("http://localhost:5000/create", {
       name,
@@ -18,6 +20,12 @@ const HomeScreen = () => {
     });
 
     console.log(user);
+  };
+
+  const showEmployees = async () => {
+    const { data } = await axios.get("http://localhost:5000/employees");
+    setEmployeedList(data);
+    console.log(data);
   };
 
   return (
@@ -53,7 +61,19 @@ const HomeScreen = () => {
         onChange={(e) => setWage(e.target.value)}
       />
       <button onClick={submitHandler}>Add Employee</button>
-      <button onClick={submitHandler}>Add Employee</button>
+      <br />
+      <button onClick={showEmployees}>Show Employees</button>
+      <div className="employeeList">
+        {employeeList.map((employee) => (
+          <div key={employee.id}>
+            <h3>{employee.name}</h3>
+            <p>{employee.age}</p>
+            <p>{employee.country}</p>
+            <p>{employee.position}</p>
+            <p>{employee.wage}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
